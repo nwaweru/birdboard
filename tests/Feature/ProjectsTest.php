@@ -13,7 +13,21 @@ class ProjectsTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /** @test */
-    public function only_authenticated_users_can_create_a_project()
+    public function a_guest_cannot_view_projects()
+    {
+        $this->get('/projects')->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function a_guest_cannot_view_a_single_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->get($project->path())->assertRedirect('/login');
+    }
+
+    /** @test */
+    public function a_guest_cannot_create_a_project()
     {
         $attributes = Project::factory()->raw();
 
@@ -21,7 +35,7 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_create_a_project()
+    public function an_authenticated_user_can_create_a_project()
     {
         $this->actingAs(User::factory()->create());
 
@@ -58,9 +72,12 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_view_a_project()
+    public function an_authenticated_user_can_view_their_project()
     {
-        $project = Project::factory()->create();
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
 
         $this->get($project->path())
             ->assertSee($project->title)

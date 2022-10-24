@@ -15,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = Auth::user()->projects;
 
         return view('projects.index', [
             'projects' => $projects,
@@ -58,6 +58,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        if ($project->user_id !== Auth::user()->id) {
+            abort(403);
+        }
+
         return view('projects.show', [
             'project' => $project,
         ]);
