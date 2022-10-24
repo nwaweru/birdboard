@@ -41,7 +41,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        if ($project->user_id !== Auth::user()->id) {
+        if (Auth::user()->isNot($project->user)) {
             abort(403);
         }
 
