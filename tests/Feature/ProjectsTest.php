@@ -72,6 +72,14 @@ class ProjectsTest extends TestCase
     }
 
     /** @test */
+    public function a_project_is_associated_with_a_user()
+    {
+        $project = Project::factory()->create();
+
+        $this->assertInstanceOf(User::class, $project->user);
+    }
+
+    /** @test */
     public function an_authenticated_user_can_view_their_project()
     {
         $user = User::factory()->create();
@@ -82,5 +90,17 @@ class ProjectsTest extends TestCase
         $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
+    }
+
+    /** @test */
+    public function an_authenticated_user_cannot_view_other_users_projects()
+    {
+        $user1 = User::factory()->create();
+        $project = Project::factory()->create(['user_id' => $user1->id]);
+
+        $user2 = User::factory()->create();
+        $this->actingAs($user2);
+
+        $this->get($project->path())->assertStatus(403);
     }
 }
