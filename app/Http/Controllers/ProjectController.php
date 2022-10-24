@@ -8,11 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $projects = Auth::user()->projects;
@@ -32,12 +27,6 @@ class ProjectController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validData = $request->validate([
@@ -50,12 +39,6 @@ class ProjectController extends Controller
         return redirect()->route('projects.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function show(Project $project)
     {
         if ($project->user_id !== Auth::user()->id) {
