@@ -23,16 +23,11 @@ class ProjectsTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
-
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs(User::factory()->create());
 
         $data = [
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'user_id' => $user->id,
         ];
 
         $this->post('/projects', $data)->assertRedirect('/projects');
