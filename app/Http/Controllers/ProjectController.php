@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -44,7 +45,7 @@ class ProjectController extends Controller
             'description' => 'required|string|max:255',
         ]);
 
-        Project::create($validData);
+        Auth::user()->projects()->create($validData);
 
         return redirect()->route('projects.index');
     }
